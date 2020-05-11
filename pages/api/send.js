@@ -5,16 +5,40 @@ export default async function (req, res) {
 
   const { email, message } = req.body;
 
-  const content = {
+  const message = {
+    from: "mgranha.portfolio@gmail.com",
     to: "marcelo.granha10@gmail.com",
-    from: email,
-    subject: `New Message From - ${email}`,
-    text: message,
-    html: `<p>${message}</p>`,
+    subject: `Message from ${email}`,
+    text,
+    html: "<b>Hi Marcelo, </b> <BR><BR>" + message,
+    replyTo: "mgranha.portfolio@gmail.com",
+  };
+  const replyMessage = {
+    personalizations: [
+      {
+        to: [
+          {
+            email,
+          },
+        ],
+        dynamic_template_data: {
+          verb: "",
+          adjective: "",
+          noun: "",
+          currentDayofWeek: "",
+        },
+        subject: `Message from ${email}`,
+      },
+    ],
+    from: {
+      email: "mgranha.portfolio@gmail.com",
+    },
+    template_id: "d-2622bac8fc974472a40376a9a9d27d09",
   };
 
   try {
-    await sgMail.send(content);
+    sgMail.send(message);
+    sgMail.send(replyMessage);
     res.status(200).send("Message sent successfully.");
   } catch (error) {
     console.log("ERROR", error);
